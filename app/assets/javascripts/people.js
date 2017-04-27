@@ -2,15 +2,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var app = new Vue({
     el: '#app',
     data: {
-      people: [
-      ],
+      people: [],
       newPersonName: '',
-      newPersonBio: ''
+      newPersonBio: '',
+      errors: []
     },
     mounted: function() {
       console.log('mounted is working');
-      // grab the data
-      // put that
       $.get("/api/v1/people", function(response) {
         console.log(response);
         console.log(this);
@@ -26,13 +24,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
       addPerson: function() {
         console.log('adding the person...');
         // push an object into the perople array
-        this.people.push(
-          {
-            name: this.newPersonName,
-            bio: this.newPersonBio,
-            bioVisible: false
-          }
-        )
+        var parameters = {
+          name: this.newPersonName,
+          bio: this.newPersonBio
+        }
+
+        $.post("/api/v1/people", parameters, function(response){
+          console.log('success');
+          this.people.push(response);
+          this.newPersonName = '';
+          this.newPersonBio = '';
+
+        }.bind(this)).fail(function(responseError){
+          console.log(responseError.responseJSON.errors);
+          this.errors = responseError.responseJSON.errors
+        }.bind(this))
       },
       countOfPeople: function() {
         return this.people.length;

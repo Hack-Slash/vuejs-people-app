@@ -9,6 +9,8 @@
     <h3>{{ person.bioVisible }}</h3>
     <button v-on:click="removePerson(person)">Remove a person</button>
   </div>
+
+  <p v-for="error in errors">{{ error }}</p>
   <input v-model="newPersonName">
   <input v-model="newPersonBio">
   <button v-on:click="addPerson()">Add a new person</button>
