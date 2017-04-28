@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       people: [],
       newPersonName: '',
       newPersonBio: '',
-      errors: []
+      errors: [],
+      nameSearch: '',
+      bioSearch: ''
     },
     mounted: function() {
       console.log('mounted is working');
@@ -50,7 +52,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var index = this.people.indexOf(inputPerson);
         console.log(index);
         this.people.splice(index, 1);
+      },
+      isValidPerson: function(inputPerson) {
+        return inputPerson.bio.toLowerCase().indexOf(this.bioSearch.toLowerCase()) > -1 && inputPerson.name.toLowerCase().indexOf(this.nameSearch.toLowerCase()) > -1;
       }
+    },
+    computed: {
+     modifiedPeople: function() {
+       // write a sort function
+       return this.people.sort(function(person1, person2){
+        return person1.name.toLowerCase().localeCompare(person2.name.toLowerCase());
+       })
+     }
     }
   });
 });
