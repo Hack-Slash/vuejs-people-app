@@ -2,18 +2,23 @@
 <p>Find me in app/views/people/index.html.erb</p>
 
 <div id="app">
-<button>Search by name</button>
-<button>Search by bio</button>
+<button v-on:click="changeSortAttribute('name')">Sort by name</button>
+<button v-on:click="changeSortAttribute('bio')">Sort by bio</button>
 
-  <p>input name: <input v-model="nameSearch"></p>
+  <p>input name: <input v-model="nameSearch" list="names"></p>
+  <datalist id="names">
+    <option v-for="person in people">{{ person.name }}</option>
+  </datalist>
   <p>input bio: <input v-model="bioSearch"></p>
   The number of people is: {{ countOfPeople() }}
-  <div v-for="person in modifiedPeople" v-if="isValidPerson(person)">
-    <h2 v-on:click="toggleBioVisible(person)">{{ person.name }}</h2>
-    <h3 v-bind:class="{strike: !person.bioVisible}">{{ person.bio }}</h3>
-    <h3>{{ person.bioVisible }}</h3>
-    <button v-on:click="removePerson(person)">Remove a person</button>
-  </div>
+  <transition-group name="slide-right">
+    <div v-for="person in modifiedPeople" v-if="isValidPerson(person)" v-bind:key="person.id">
+      <h2 v-on:click="toggleBioVisible(person)">{{ person.name }}</h2>
+      <h3 v-bind:class="{strike: !person.bioVisible}">{{ person.bio }}</h3>
+      <h3>{{ person.bioVisible }}</h3>
+      <button v-on:click="removePerson(person)">Remove a person</button>
+    </div>
+  </transition-group>
 
   <p v-for="error in errors">{{ error }}</p>
   <input v-model="newPersonName">

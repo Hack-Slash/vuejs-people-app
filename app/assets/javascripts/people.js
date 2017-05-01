@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       newPersonBio: '',
       errors: [],
       nameSearch: '',
-      bioSearch: ''
+      bioSearch: '',
+      sortAttribute: 'name',
+      sortAsc: true
     },
     mounted: function() {
       console.log('mounted is working');
@@ -54,16 +56,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
         this.people.splice(index, 1);
       },
       isValidPerson: function(inputPerson) {
-        return inputPerson.bio.toLowerCase().indexOf(this.bioSearch.toLowerCase()) > -1 && inputPerson.name.toLowerCase().indexOf(this.nameSearch.toLowerCase()) > -1;
+        return inputPerson.bio.toLowerCase().indexOf(this.bioSearch.toLowerCase()) > -1 && inputPerson.name.toLowerCase().indexOf(this.nameSearch.toLowerCase()) !== -1;
+      },
+      changeSortAttribute: function(inputAttribute) {
+        console.log('changing the sort attribute');
+        if (this.sortAttribute === inputAttribute) {
+          this.sortAttribute = inputAttribute;
+          this.sortAsc = !this.sortAsc;
+        } else {
+          this.sortAttribute = inputAttribute;
+          this.sortAsc = true;
+
+        }
       }
     },
     computed: {
      modifiedPeople: function() {
-       // write a sort function
        return this.people.sort(function(person1, person2){
-        return person1.name.toLowerCase().localeCompare(person2.name.toLowerCase());
-       })
+        if (this.sortAsc) {
+          return person1[this.sortAttribute].toLowerCase().localeCompare(person2[this.sortAttribute].toLowerCase());
+        } else {
+          return person2[this.sortAttribute].toLowerCase().localeCompare(person1[this.sortAttribute].toLowerCase());
+        }
+       }.bind(this))
      }
     }
   });
 });
+
